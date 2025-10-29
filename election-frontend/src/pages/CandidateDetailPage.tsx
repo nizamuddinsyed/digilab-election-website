@@ -38,7 +38,9 @@ const CandidateDetailPage: React.FC = () => {
   };
 
   const getPhotoUrl = (photoUrl: string) => {
+    // Cloudinary returns full URLs, just return as-is
     if (photoUrl.startsWith('http')) return photoUrl;
+    // Fallback for old local uploads
     return `${window.location.origin}${photoUrl}`;
   };
 

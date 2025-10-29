@@ -4,30 +4,15 @@ const { body, validationResult } = require('express-validator');
 const pool = require('../db/db');
 const authMiddleware = require('../middleware/auth');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { storage } = require('../config/cloudinary');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../../public/uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'candidate-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
+// Configure multer with Cloudinary storage
 const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|webp/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const extname = allowedTypes.test(file.originalname.toLowerCase().split('.').pop());
     const mimetype = allowedTypes.test(file.mimetype);
     
     if (mimetype && extname) {
@@ -98,7 +83,8 @@ router.post('/',
       }
 
       const { name, position, bio_de, bio_en, goals_de, goals_en, email, social_links, is_active } = req.body;
-      const photo_url = req.file ? `/uploads/${req.file.filename}` : '/uploads/default-candidate.jpg';
+      // Cloudinary returns the full URL in req.file.path
+      const photo_url = req.file ? req.file.path : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&size=800&background=1f2937&color=fff&bold=true';
       
       // Parse social_links if it's a string
       let parsedSocialLinks = {};
@@ -203,16 +189,8 @@ router.put('/:id',
       }
       if (req.file) {
         updates.push(`photo_url = $${paramCount++}`);
-        values.push(`/uploads/${req.file.filename}`);
-        
-        // Delete old photo if it exists and is not the default
-        const oldPhotoUrl = existing.rows[0].photo_url;
-        if (oldPhotoUrl && oldPhotoUrl !== '/uploads/default-candidate.jpg') {
-          const oldPhotoPath = path.join(__dirname, '../../public', oldPhotoUrl);
-          if (fs.existsSync(oldPhotoPath)) {
-            fs.unlinkSync(oldPhotoPath);
-          }
-        }
+        // Cloudinary returns the full URL in req.file.path
+        values.push(req.file.path);
       }
 
       if (updates.length === 0) {
@@ -236,23 +214,14 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Get candidate to delete photo
-    const candidate = await pool.query('SELECT photo_url FROM candidates WHERE id = $1', [id]);
+    // Check if candidate exists
+    const candidate = await pool.query('SELECT id FROM candidates WHERE id = $1', [id]);
     
     if (candidate.rows.length === 0) {
       return res.status(404).json({ error: 'Candidate not found' });
     }
 
-    // Delete photo if it exists and is not the default
-    const photoUrl = candidate.rows[0].photo_url;
-    if (photoUrl && photoUrl !== '/uploads/default-candidate.jpg') {
-      const photoPath = path.join(__dirname, '../../public', photoUrl);
-      if (fs.existsSync(photoPath)) {
-        fs.unlinkSync(photoPath);
-      }
-    }
-
-    // Delete candidate from database
+    // Delete candidate from database (Cloudinary handles image cleanup)
     await pool.query('DELETE FROM candidates WHERE id = $1', [id]);
     
     res.json({ success: true, message: 'Candidate deleted successfully' });
