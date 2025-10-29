@@ -36,6 +36,7 @@ export interface Candidate {
   };
   photo_url: string;
   is_active: boolean;
+  color?: 'purple' | 'silver' | 'teal';
   created_at: string;
   updated_at: string;
 }

@@ -82,7 +82,7 @@ router.post('/',
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { name, position, bio_de, bio_en, goals_de, goals_en, email, social_links, is_active } = req.body;
+      const { name, position, bio_de, bio_en, goals_de, goals_en, email, social_links, is_active, color } = req.body;
       // Cloudinary returns the full URL in req.file.path
       const photo_url = req.file ? req.file.path : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&size=800&background=1f2937&color=fff&bold=true';
       
@@ -97,10 +97,10 @@ router.post('/',
       }
 
       const result = await pool.query(
-        `INSERT INTO candidates (name, position, bio_de, bio_en, goals_de, goals_en, email, social_links, photo_url, is_active)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        `INSERT INTO candidates (name, position, bio_de, bio_en, goals_de, goals_en, email, social_links, photo_url, is_active, color)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
          RETURNING *`,
-        [name, position, bio_de, bio_en, goals_de, goals_en, email, JSON.stringify(parsedSocialLinks), photo_url, is_active !== 'false']
+        [name, position, bio_de, bio_en, goals_de, goals_en, email, JSON.stringify(parsedSocialLinks), photo_url, is_active !== 'false', color || 'purple']
       );
 
       res.status(201).json(result.rows[0]);
@@ -186,6 +186,10 @@ router.put('/:id',
       if (is_active !== undefined) {
         updates.push(`is_active = $${paramCount++}`);
         values.push(is_active === 'true' || is_active === true);
+      }
+      if (req.body.color !== undefined) {
+        updates.push(`color = $${paramCount++}`);
+        values.push(req.body.color);
       }
       if (req.file) {
         updates.push(`photo_url = $${paramCount++}`);

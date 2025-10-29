@@ -21,9 +21,33 @@ module.exports = {
 		},
 		extend: {
 			colors: {
-				// Enhanced Neutral Grays & Whites (90%)
-				white: '#FFFFFF',
-				'off-white': '#FAFCFF',
+				// Poster Brand Colors
+				beige: {
+					DEFAULT: '#EBEAE4',  // Background
+					light: '#F5F4EE',
+					dark: '#D9D8D2',
+				},
+				charcoal: {
+					DEFAULT: '#414043',  // Main heading
+					light: '#4B4D58',     // Body text
+				},
+				// 3D Effect Colors
+				purple: {
+					DEFAULT: '#A28FE2',  // RGB 162,143,226
+					light: '#C4B5FD',
+					dark: '#8B7BC8',
+				},
+				teal: {
+					DEFAULT: '#5DAAAD',  // RGB 93,170,173
+					light: '#7DC5C8',
+					dark: '#4A8B8D',
+				},
+				silver: {
+					DEFAULT: '#C0C0C0',  // RGB 192,192,192
+					light: '#D6D6D6',
+					dark: '#A8A8A8',
+				},
+				// Keep some grays for UI elements
 				gray: {
 					50: '#FAFAFA',
 					100: '#F4F4F5',
@@ -35,68 +59,13 @@ module.exports = {
 					700: '#3F3F46',
 					800: '#27272A',
 					900: '#18181B',
-					950: '#0F0F11',
-				},
-				// Enhanced Primary Blue (8%) - Modern Election Blue
-				blue: {
-					50: '#EBF8FF',
-					100: '#CCEBFF',
-					200: '#99D6FF',
-					300: '#66C2FF',
-					400: '#33ADFF',
-					500: '#0099FF',
-					600: '#007ACC',
-					700: '#005C99',
-					800: '#003D66',
-					900: '#001F33',
-				},
-				// Enhanced Accent Green (2%) - Election Success
-				green: {
-					50: '#F0FDF4',
-					100: '#DCFCE7',
-					200: '#BBF7D0',
-					300: '#86EFAC',
-					400: '#4ADE80',
-					500: '#22C55E',
-					600: '#16A34A',
-					700: '#15803D',
-					800: '#166534',
-					900: '#14532D',
-				},
-				// New Accent Colors for Enhanced Design
-				purple: {
-					50: '#F5F3FF',
-					100: '#EDE9FE',
-					200: '#DDD6FE',
-					300: '#C4B5FD',
-					400: '#A78BFA',
-					500: '#8B5CF6',
-					600: '#7C3AED',
-					700: '#6D28D9',
-					800: '#5B21B6',
-					900: '#4C1D95',
-				},
-				amber: {
-					50: '#FFFBEB',
-					100: '#FEF3C7',
-					200: '#FDE68A',
-					300: '#FCD34D',
-					400: '#FBBF24',
-					500: '#F59E0B',
-					600: '#D97706',
-					700: '#B45309',
-					800: '#92400E',
-					900: '#78350F',
 				},
 				// Semantic Colors
 				success: '#16A34A',
 				warning: '#F59E0B',
 				error: '#EF4444',
 				info: '#2563EB',
-				// Election Brand Colors
-				'election-blue': '#1E40AF',
-				'election-gold': '#F59E0B',
-				'election-red': '#DC2626',
+				white: '#FFFFFF',
 			},
 			fontFamily: {
 				heading: ['Poppins', 'sans-serif'],

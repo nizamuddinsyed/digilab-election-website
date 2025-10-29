@@ -28,18 +28,18 @@ const AdminLoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white py-20 px-8">
+    <div className="min-h-screen flex items-center justify-center bg-beige py-20 px-8">
       <div className="max-w-md w-full space-y-8">
-        {/* Login Card - Minimal */}
-        <div className="bg-white rounded-3xl shadow-2xl p-12 border-2 border-gray-100">
+        {/* Login Card */}
+        <div className="bg-white rounded-3xl shadow-2xl p-12 border-2 border-beige-dark">
           <div className="text-center">
-            <div className="mx-auto h-24 w-24 flex items-center justify-center rounded-3xl bg-gray-900 shadow-xl mb-8">
+            <div className="mx-auto h-24 w-24 flex items-center justify-center rounded-3xl bg-charcoal shadow-xl mb-8">
               <ShieldCheckIcon className="h-14 w-14 text-white" />
             </div>
-            <h2 className="font-heading font-black text-4xl text-gray-900 mb-2">
+            <h2 className="font-heading font-black text-4xl text-charcoal mb-2">
               {t.admin.login}
             </h2>
-            <p className="text-gray-500 font-light">
+            <p className="text-charcoal-light font-heading">
               Secure Admin Access
             </p>
           </div>
@@ -53,19 +53,19 @@ const AdminLoginPage: React.FC = () => {
 
             <div className="space-y-5">
               <div>
-                <label htmlFor="username" className="block text-sm font-semibold text-gray-900 mb-2 uppercase tracking-wider">
+                <label htmlFor="username" className="block text-sm font-bold text-charcoal mb-2 uppercase tracking-wider">
                   {t.admin.username}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <UserCircleIcon className="h-5 h-5 text-gray-400" />
+                    <UserCircleIcon className="h-5 h-5 text-charcoal-light" />
                   </div>
                   <input
                     id="username"
                     name="username"
                     type="text"
                     required
-                    className="appearance-none rounded-full block w-full pl-12 pr-4 py-4 border-2 border-gray-200 placeholder-gray-400 text-gray-900 focus:outline-none focus:border-gray-900 font-body transition-all"
+                    className="appearance-none rounded-2xl block w-full pl-12 pr-4 py-4 border-2 border-beige-dark placeholder-charcoal-light text-charcoal focus:outline-none focus:border-charcoal font-heading transition-all"
                     placeholder="Enter username"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
@@ -73,19 +73,19 @@ const AdminLoginPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-2 uppercase tracking-wider">
+                <label htmlFor="password" className="block text-sm font-bold text-charcoal mb-2 uppercase tracking-wider">
                   {t.admin.password}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <LockClosedIcon className="h-5 w-5 text-gray-400" />
+                    <LockClosedIcon className="h-5 w-5 text-charcoal-light" />
                   </div>
                   <input
                     id="password"
                     name="password"
                     type="password"
                     required
-                    className="appearance-none rounded-full block w-full pl-12 pr-4 py-4 border-2 border-gray-200 placeholder-gray-400 text-gray-900 focus:outline-none focus:border-gray-900 font-body transition-all"
+                    className="appearance-none rounded-2xl block w-full pl-12 pr-4 py-4 border-2 border-beige-dark placeholder-charcoal-light text-charcoal focus:outline-none focus:border-charcoal font-heading transition-all"
                     placeholder="Enter password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -98,7 +98,7 @@ const AdminLoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-5 px-4 border-0 font-bold rounded-full text-white bg-gray-900 hover:bg-gray-800 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-xl hover:shadow-2xl transform hover:scale-105"
+                className="group relative w-full flex justify-center py-5 px-4 border-0 font-bold rounded-2xl text-white bg-charcoal hover:bg-charcoal-light focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-xl hover:shadow-2xl transform hover:scale-105"
               >
                 {loading ? (
                   <div className="flex items-center">

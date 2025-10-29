@@ -2,24 +2,29 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { EnvelopeIcon, PhoneIcon, MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import Starburst from './Starburst';
 
 const Footer: React.FC = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   return (
-    <footer className="bg-gray-900 text-white mt-32">
+    <footer className="bg-charcoal text-white mt-32">
       <div className="container mx-auto px-8 sm:px-12 lg:px-20 xl:px-32 py-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
-          {/* Compact Branding */}
+          {/* Branding with Starburst */}
           <div className="md:col-span-4">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center">
-                <span className="text-gray-900 font-heading font-black text-lg">E</span>
+              <div className="w-10 h-10 flex items-center justify-center">
+                <Starburst color="purple" size="sm" className="text-purple-light" />
               </div>
-              <h3 className="font-heading font-black text-xl">Election 2025</h3>
+              <h3 className="font-heading font-black text-xl">
+                {language === 'de' ? 'NEUE LISTE' : 'NEW LIST'}
+              </h3>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
-              {t.hero.description}
+              {language === 'de' 
+                ? 'Miteinander - Füreinander. Unabhängig. Modern. Mutig.'
+                : 'Together - For Each Other. Independent. Modern. Courageous.'}
             </p>
             <div className="mt-6 flex items-center gap-3 text-sm">
               <div className="flex items-center gap-2 text-gray-400">

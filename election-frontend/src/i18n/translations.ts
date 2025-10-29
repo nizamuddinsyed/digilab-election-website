@@ -29,6 +29,10 @@ export const translations = {
       keyGoals: 'Wichtigste Ziele',
       backToCandidates: 'Zurück zu Kandidaten',
       noCandidates: 'Derzeit sind keine Kandidaten verfügbar.',
+      shuffle: 'Mischen',
+      noMatching: 'Keine übereinstimmenden Kandidaten gefunden',
+      clearSearch: 'Suche löschen',
+      search: 'Kandidaten durchsuchen...',
     },
     
     // Features Section
@@ -137,6 +141,10 @@ export const translations = {
       keyGoals: 'Key Goals',
       backToCandidates: 'Back to Candidates',
       noCandidates: 'No candidates available at this time.',
+      shuffle: 'Shuffle',
+      noMatching: 'No matching candidates found',
+      clearSearch: 'Clear search',
+      search: 'Search candidates...',
     },
     
     // Features Section

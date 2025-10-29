@@ -20,7 +20,8 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "https://ui-avatars.com"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
       connectSrc: ["'self'"]
     }
   }
