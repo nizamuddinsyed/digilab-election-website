@@ -117,32 +117,6 @@ const AdminLoginPage: React.FC = () => {
               </button>
             </div>
           </form>
-
-          <div className="mt-8">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500 uppercase tracking-wider font-semibold">Test Credentials</span>
-              </div>
-            </div>
-            <div className="mt-6 bg-gray-50 border-2 border-gray-200 rounded-2xl p-5 text-center">
-              <p className="text-sm text-gray-700">
-                <span className="font-semibold">Username:</span> <span className="font-mono font-bold">admin</span>
-              </p>
-              <p className="text-sm text-gray-700 mt-1">
-                <span className="font-semibold">Password:</span> <span className="font-mono font-bold">admin123</span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Security Notice */}
-        <div className="text-center">
-          <p className="text-sm text-gray-400 uppercase tracking-wider font-semibold">
-            🔒 JWT Authentication
-          </p>
         </div>
       </div>
     </div>
