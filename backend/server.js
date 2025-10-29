@@ -22,10 +22,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (uploaded images)
-app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, '../election-frontend/dist')));
+// Serve frontend static files from backend/public folder
+const frontendPath = path.join(__dirname, 'public');
+app.use(express.static(frontendPath));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -41,7 +42,8 @@ app.use((req, res, next) => {
   if (req.path.startsWith('/api/') || req.path.startsWith('/uploads/')) {
     return next();
   }
-  res.sendFile(path.join(__dirname, '../election-frontend/dist/index.html'));
+  const indexPath = path.join(__dirname, 'public', 'index.html');
+  res.sendFile(indexPath);
 });
 
 // Error handling middleware

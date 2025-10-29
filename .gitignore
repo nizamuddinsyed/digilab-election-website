@@ -19,6 +19,8 @@ dist/
 build/
 election-frontend/dist/
 backend/dist/
+# Allow backend/public for Render deployment
+!backend/public/
 
 # Logs
 *.log
