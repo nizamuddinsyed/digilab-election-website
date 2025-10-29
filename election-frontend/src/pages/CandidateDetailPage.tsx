@@ -39,7 +39,7 @@ const CandidateDetailPage: React.FC = () => {
 
   const getPhotoUrl = (photoUrl: string) => {
     if (photoUrl.startsWith('http')) return photoUrl;
-    return `http://localhost:5000${photoUrl}`;
+    return `${window.location.origin}${photoUrl}`;
   };
 
   if (loading) {
