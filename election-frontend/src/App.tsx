@@ -7,6 +7,10 @@ import ScrollToTop from './components/ScrollToTop';
 import HomePage from './pages/HomePage';
 import CandidatesPage from './pages/CandidatesPage';
 import CandidateDetailPage from './pages/CandidateDetailPage';
+import MainGoalsPage from './pages/MainGoalsPage';
+import BasicTopicsPage from './pages/BasicTopicsPage';
+import FAQPage from './pages/FAQPage';
+import EventsPage from './pages/EventsPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import PrivacyPage from './pages/PrivacyPage';
@@ -24,6 +28,10 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/candidates" element={<CandidatesPage />} />
               <Route path="/candidates/:id" element={<CandidateDetailPage />} />
+              <Route path="/main-goals" element={<MainGoalsPage />} />
+              <Route path="/basic-topics" element={<BasicTopicsPage />} />
+              <Route path="/faq" element={<FAQPage />} />
+              <Route path="/events" element={<EventsPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/legal" element={<LegalNoticePage />} />
               <Route path="/admin" element={<AdminLoginPage />} />

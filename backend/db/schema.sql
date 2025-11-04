@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS candidates (
     bio_en TEXT NOT NULL,
     goals_de TEXT NOT NULL,
     goals_en TEXT NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
     social_links JSONB DEFAULT '{}',
     photo_url VARCHAR(500),
     is_active BOOLEAN DEFAULT true,
@@ -29,10 +29,76 @@ CREATE TABLE IF NOT EXISTS admin_users (
     last_login TIMESTAMP WITH TIME ZONE
 );
 
+-- Create policies table
+CREATE TABLE IF NOT EXISTS policies (
+    id SERIAL PRIMARY KEY,
+    title_de VARCHAR(255) NOT NULL,
+    title_en VARCHAR(255) NOT NULL,
+    description_de TEXT NOT NULL,
+    description_en TEXT NOT NULL,
+    color VARCHAR(20) DEFAULT 'purple' CHECK (color IN ('purple', 'silver', 'teal')),
+    is_active BOOLEAN DEFAULT true,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create basic_topics table
+CREATE TABLE IF NOT EXISTS basic_topics (
+    id SERIAL PRIMARY KEY,
+    title_de VARCHAR(255) NOT NULL,
+    title_en VARCHAR(255) NOT NULL,
+    description_de TEXT NOT NULL,
+    description_en TEXT NOT NULL,
+    color VARCHAR(20) DEFAULT 'purple' CHECK (color IN ('purple', 'silver', 'teal')),
+    is_active BOOLEAN DEFAULT true,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create FAQs table
+CREATE TABLE IF NOT EXISTS faqs (
+    id SERIAL PRIMARY KEY,
+    question_de VARCHAR(255) NOT NULL,
+    question_en VARCHAR(255) NOT NULL,
+    answer_de TEXT NOT NULL,
+    answer_en TEXT NOT NULL,
+    is_active BOOLEAN DEFAULT true,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create events table
+CREATE TABLE IF NOT EXISTS events (
+    id SERIAL PRIMARY KEY,
+    title_de VARCHAR(255) NOT NULL,
+    title_en VARCHAR(255) NOT NULL,
+    event_date DATE NOT NULL,
+    event_time TIME NOT NULL,
+    location_de VARCHAR(255) NOT NULL,
+    location_en VARCHAR(255) NOT NULL,
+    description_de TEXT NOT NULL,
+    description_en TEXT NOT NULL,
+    is_active BOOLEAN DEFAULT true,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_candidates_is_active ON candidates(is_active);
 CREATE INDEX IF NOT EXISTS idx_candidates_created_at ON candidates(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_admin_users_username ON admin_users(username);
+CREATE INDEX IF NOT EXISTS idx_policies_is_active ON policies(is_active);
+CREATE INDEX IF NOT EXISTS idx_policies_display_order ON policies(display_order);
+CREATE INDEX IF NOT EXISTS idx_basic_topics_is_active ON basic_topics(is_active);
+CREATE INDEX IF NOT EXISTS idx_basic_topics_display_order ON basic_topics(display_order);
+CREATE INDEX IF NOT EXISTS idx_faqs_is_active ON faqs(is_active);
+CREATE INDEX IF NOT EXISTS idx_faqs_display_order ON faqs(display_order);
+CREATE INDEX IF NOT EXISTS idx_events_is_active ON events(is_active);
+CREATE INDEX IF NOT EXISTS idx_events_display_order ON events(display_order);
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -43,7 +109,31 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Create trigger for candidates table
+-- Create triggers for policies, basic_topics, faqs and events
+DROP TRIGGER IF EXISTS update_policies_updated_at ON policies;
+CREATE TRIGGER update_policies_updated_at
+    BEFORE UPDATE ON policies
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_basic_topics_updated_at ON basic_topics;
+CREATE TRIGGER update_basic_topics_updated_at
+    BEFORE UPDATE ON basic_topics
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_faqs_updated_at ON faqs;
+CREATE TRIGGER update_faqs_updated_at
+    BEFORE UPDATE ON faqs
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_events_updated_at ON events;
+CREATE TRIGGER update_events_updated_at
+    BEFORE UPDATE ON events
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
 DROP TRIGGER IF EXISTS update_candidates_updated_at ON candidates;
 CREATE TRIGGER update_candidates_updated_at
     BEFORE UPDATE ON candidates
@@ -107,3 +197,19 @@ VALUES
         '/uploads/default-candidate.jpg',
         true
     );
+
+-- Insert sample basic topics
+INSERT INTO basic_topics (title_de, title_en, description_de, description_en, color, is_active)
+VALUES 
+    ('Bildung', 'Education', 'Wir investieren in Bildung für alle. Bessere Schulen, bessere Zukunft.', 'We invest in education for everyone. Better schools, better future.', 'purple', true),
+    ('Wirtschaft', 'Economy', 'Starke Wirtschaft durch nachhaltige Entwicklung.', 'Strong economy through sustainable development.', 'teal', true),
+    ('Umwelt', 'Environment', 'Schutz unserer Umwelt für zukünftige Generationen.', 'Protecting our environment for future generations.', 'silver', true)
+ON CONFLICT DO NOTHING;
+
+-- Insert sample events
+INSERT INTO events (title_de, title_en, event_date, event_time, location_de, location_en, description_de, description_en, is_active)
+VALUES 
+    ('Öffentliche Debatte', 'Public Debate', '2025-04-15', '18:00:00', 'Rathaus, Hauptstraße 1', 'Town Hall, Main Street 1', 'Diskussion über die wichtigsten Themen der Wahl 2025.', 'Discussion about the key topics of the 2025 election.', true),
+    ('Kandidatenforum', 'Candidate Forum', '2025-05-03', '19:30:00', 'Gemeindezentrum, Markt 5', 'Community Center, Market 5', 'Treffen Sie die Kandidaten und stellen Sie Ihre Fragen.', 'Meet the candidates and ask your questions.', true),
+    ('Wahlabend', 'Election Night', '2025-06-15', '20:00:00', 'Kulturzentrum, Bahnhofstraße 12', 'Cultural Center, Station Street 12', 'Verfolgen Sie die Wahlergebnisse live.', 'Follow the election results live.', true)
+ON CONFLICT DO NOTHING;

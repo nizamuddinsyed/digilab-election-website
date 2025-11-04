@@ -8,6 +8,10 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const candidatesRoutes = require('./routes/candidates');
+const policiesRoutes = require('./routes/policies');
+const basicTopicsRoutes = require('./routes/basic_topics');
+const faqsRoutes = require('./routes/faqs');
+const eventsRoutes = require('./routes/events');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -41,6 +45,10 @@ app.use(express.static(frontendPath));
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/candidates', candidatesRoutes);
+app.use('/api/policies', policiesRoutes);
+app.use('/api/basic-topics', basicTopicsRoutes);
+app.use('/api/faqs', faqsRoutes);
+app.use('/api/events', eventsRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

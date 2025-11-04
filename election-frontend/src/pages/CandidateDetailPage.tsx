@@ -64,8 +64,33 @@ const CandidateDetailPage: React.FC = () => {
   }
 
   const bio = language === 'de' ? candidate.bio_de : candidate.bio_en;
-  const goals = language === 'de' ? candidate.goals_de : candidate.goals_en;
-  const goalsList = goals.split('\n').filter(g => g.trim());
+  
+  // Process biography content to separate paragraphs from bullet points
+  const processBioContent = (content: string) => {
+    const lines = content.split('\n');
+    const elements: { type: 'paragraph' | 'bullet'; content: string }[] = [];
+    
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (trimmedLine) {
+        // Check if this is a bullet point
+        if (trimmedLine.startsWith('-') || trimmedLine.startsWith('•') || /^\d+\.\s/.test(trimmedLine)) {
+          // Extract content after bullet marker
+          const bulletContent = trimmedLine
+            .replace(/^[-•]\s*/, '')
+            .replace(/^\d+\.\s*/, '');
+          elements.push({ type: 'bullet', content: bulletContent });
+        } else {
+          // This is a paragraph
+          elements.push({ type: 'paragraph', content: line });
+        }
+      }
+    }
+    
+    return elements;
+  };
+  
+  const bioElements = processBioContent(bio);
   
   // Determine color based on database field or ID
   const colorClasses = {
@@ -145,24 +170,6 @@ const CandidateDetailPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <a
-                href={`mailto:${candidate.email}`}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-white text-charcoal font-bold rounded-2xl hover:bg-beige-light transition-all shadow-lg text-sm sm:text-base"
-              >
-                <EnvelopeIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                {t.candidates.contact}
-              </a>
-              <button
-                onClick={() => navigator.share?.({ title: candidate.name, url: window.location.href })}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-bold rounded-2xl hover:bg-white hover:text-charcoal transition-all text-sm sm:text-base"
-              >
-                <ShareIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                Share
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -172,54 +179,30 @@ const CandidateDetailPage: React.FC = () => {
           {/* Biography Section */}
           <div className="mb-12 sm:mb-20">
             <h2 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-charcoal mb-6 sm:mb-8">
-              {t.candidates.biography}
+              {language === 'de' ? 'Über mich' : 'About Me'}
             </h2>
+            
+            {/* Display biography with proper formatting for paragraphs and bullet points */}
             <div className="space-y-4 sm:space-y-6">
-              {bio.split('\n\n').map((paragraph, index) => (
-                <p key={index} className="text-charcoal-light leading-relaxed text-base sm:text-lg font-heading">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-          </div>
-
-          {/* Goals Section */}
-          <div className="mb-12 sm:mb-20">
-            <h2 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-charcoal mb-6 sm:mb-8">
-              {t.candidates.goals}
-            </h2>
-            <div className="space-y-4 sm:space-y-6">
-              {goalsList.map((goal, index) => (
-                <div key={index} className="flex items-start gap-3 sm:gap-4 group">
-                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-charcoal text-white flex items-center justify-center font-bold text-sm sm:text-lg group-hover:scale-110 transition-transform">
-                    {index + 1}
-                  </div>
-                  <p className="text-charcoal-light text-base sm:text-lg font-heading leading-relaxed pt-1 sm:pt-2">
-                    {goal.replace(/^\d+\.\s*/, '')}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Contact Section */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center shadow-xl border-2 border-beige-dark">
-            <h2 className="font-heading font-black text-xl sm:text-2xl md:text-3xl text-charcoal mb-3 sm:mb-4">
-              {language === 'de' ? 'Kontaktieren Sie mich' : 'Get in Touch'}
-            </h2>
-            <p className="text-charcoal-light text-sm sm:text-lg mb-6 sm:mb-8 font-heading">
-              {language === 'de'
-                ? 'Haben Sie Fragen oder möchten Sie mehr erfahren? Ich freue mich von Ihnen zu hören.'
-                : "Have questions or want to learn more? I'd love to hear from you."}
-            </p>
-            <div className="flex flex-col items-center">
-              <a
-                href={`mailto:${candidate.email}`}
-                className="inline-flex items-center justify-center px-6 sm:px-10 py-3 sm:py-5 bg-charcoal text-white font-bold rounded-2xl hover:bg-charcoal-light transition-all shadow-lg w-full sm:w-auto text-sm sm:text-base"
-              >
-                <EnvelopeIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                {candidate.email}
-              </a>
+              {bioElements.map((element, index) => {
+                if (element.type === 'paragraph') {
+                  return (
+                    <p key={index} className="text-charcoal-light leading-relaxed text-base sm:text-lg font-heading">
+                      {element.content}
+                    </p>
+                  );
+                } else {
+                  // Bullet point
+                  return (
+                    <div key={index} className="flex items-start gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-2 h-2 bg-charcoal rounded-full mt-3"></div>
+                      <p className="text-charcoal-light text-base sm:text-lg font-heading leading-relaxed">
+                        {element.content}
+                      </p>
+                    </div>
+                  );
+                }
+              })}
             </div>
           </div>
         </div>

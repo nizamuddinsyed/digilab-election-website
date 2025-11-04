@@ -123,21 +123,21 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-32 bg-white">
-        <div className="container mx-auto px-8 sm:px-12 lg:px-20 xl:px-32">
+      <section id="features" className="py-24 sm:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="max-w-6xl mx-auto">
             {/* Section Header */}
-            <div className="text-center mb-20">
-              <h2 className="font-heading font-black text-5xl sm:text-6xl text-charcoal mb-6 tracking-tight">
+            <div className="text-center mb-12 sm:mb-20">
+              <h2 className="font-heading font-black text-4xl sm:text-5xl md:text-6xl text-charcoal mb-4 sm:mb-6 tracking-tight">
                 {t.features.whyParticipate}
               </h2>
-              <p className="font-heading text-xl text-charcoal-light max-w-3xl mx-auto">
+              <p className="font-heading text-lg sm:text-xl text-charcoal-light max-w-2xl sm:max-w-3xl mx-auto">
                 {t.features.whyParticipateSubtitle}
               </p>
             </div>
 
             {/* Features Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-16">
               {features.map((feature, index) => {
                 // Alternate between purple, teal, and silver
                 const colors = [
@@ -146,22 +146,24 @@ const HomePage: React.FC = () => {
                   { bg: 'bg-silver', hover: 'group-hover:bg-silver/90' }
                 ];
                 const color = colors[index % 3];
+                const links = ['/candidates', '/main-goals', '/faq'];
                 
                 return (
-                  <div 
-                    key={index} 
-                    className="group text-center space-y-6 transition-all duration-500 hover:scale-105"
+                  <Link
+                    key={index}
+                    to={links[index]}
+                    className="group text-center space-y-4 sm:space-y-6 transition-all duration-500 hover:scale-105 cursor-pointer"
                   >
-                    <div className={`w-20 h-20 rounded-2xl ${color.bg} text-white flex items-center justify-center mb-6 mx-auto ${color.hover} transition-all duration-300 shadow-lg group-hover:shadow-2xl`}>
+                    <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl ${color.bg} text-white flex items-center justify-center mb-4 sm:mb-6 mx-auto ${color.hover} transition-all duration-300 shadow-lg group-hover:shadow-2xl`}>
                       {feature.icon}
                     </div>
-                    <h3 className="font-heading font-bold text-2xl text-charcoal">
+                    <h3 className="font-heading font-bold text-xl sm:text-2xl text-charcoal">
                       {feature.title}
                     </h3>
-                    <p className="font-heading text-charcoal-light leading-relaxed">
+                    <p className="font-heading text-charcoal-light leading-relaxed text-sm sm:text-base">
                       {feature.description}
                     </p>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
@@ -170,22 +172,22 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Candidates Preview Section - 3D Poster Style */}
-      <section id="candidates" className="py-32 bg-beige relative overflow-visible">
+      <section id="candidates" className="py-24 sm:py-32 bg-beige relative overflow-visible">
         {/* Decorative Starburst - Responsive sizing */}
-        <div className="absolute top-0 right-0 sm:top-20 sm:right-10 md:top-20 md:right-10 opacity-30 sm:opacity-40 pointer-events-none z-0">
+        <div className="absolute top-0 right-0 sm:top-20 sm:right-10 md:top-20 md:right-10 opacity-20 sm:opacity-30 pointer-events-none z-0">
           <Starburst color="teal" size="sm" className="sm:hidden" />
           <Starburst color="teal" size="md" className="hidden sm:block md:hidden" />
           <Starburst color="teal" size="lg" className="hidden md:block" />
         </div>
         
-        <div className="container mx-auto px-8 sm:px-12 lg:px-20 xl:px-32 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
-            <div className="text-center mb-20">
-              <h2 className="font-heading font-black text-5xl sm:text-6xl text-charcoal mb-6 tracking-tight">
+            <div className="text-center mb-12 sm:mb-20">
+              <h2 className="font-heading font-black text-4xl sm:text-5xl md:text-6xl text-charcoal mb-4 sm:mb-6 tracking-tight">
                 {t.candidates.title}
               </h2>
-              <p className="font-heading text-xl text-charcoal-light max-w-3xl mx-auto">
+              <p className="font-heading text-lg sm:text-xl text-charcoal-light max-w-2xl sm:max-w-3xl mx-auto">
                 {t.candidates.subtitle}
               </p>
             </div>
@@ -200,7 +202,7 @@ const HomePage: React.FC = () => {
                 <p className="text-charcoal-light font-heading text-lg">{t.candidates.noCandidates}</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
                 {candidates.slice(0, 8).map((candidate) => {
                   // Use color from database, fallback to ID-based calculation
                   const defaultColors = ['bg-purple', 'bg-silver', 'bg-teal'];
@@ -226,11 +228,11 @@ const HomePage: React.FC = () => {
                         />
                       </div>
                       {/* Name and Position - Colored Background */}
-                      <div className={`p-6 text-center ${bgColor}`}>
-                        <h3 className="font-heading font-bold text-lg text-white mb-1">
+                      <div className={`p-5 sm:p-6 text-center ${bgColor}`}>
+                        <h3 className="font-heading font-bold text-base sm:text-lg text-white mb-1">
                           {candidate.name}
                         </h3>
-                        <p className="font-heading text-sm text-white/90">
+                        <p className="font-heading text-xs sm:text-sm text-white/90">
                           {candidate.position}
                         </p>
                       </div>

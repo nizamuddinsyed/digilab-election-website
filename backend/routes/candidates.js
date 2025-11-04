@@ -71,20 +71,39 @@ router.post('/',
     body('position').trim().notEmpty().withMessage('Position is required'),
     body('bio_de').trim().notEmpty().withMessage('German biography is required'),
     body('bio_en').trim().notEmpty().withMessage('English biography is required'),
-    body('goals_de').trim().notEmpty().withMessage('German goals are required'),
-    body('goals_en').trim().notEmpty().withMessage('English goals are required'),
-    body('email').isEmail().withMessage('Valid email is required')
+    body('goals_de').optional().custom((value) => {
+      if (value === undefined || value === null || value === '') {
+        return true; // Allow empty values
+      }
+      return typeof value === 'string' && value.trim().length > 0;
+    }).withMessage('German goals must be a non-empty string if provided'),
+    body('goals_en').optional().custom((value) => {
+      if (value === undefined || value === null || value === '') {
+        return true; // Allow empty values
+      }
+      return typeof value === 'string' && value.trim().length > 0;
+    }).withMessage('English goals must be a non-empty string if provided'),
+    body('email').optional().isEmail().withMessage('Valid email is required')
   ],
   async (req, res) => {
     try {
       const errors = validationResult(req);
+      console.log('=== Candidate Creation Debug Info ===');
+      console.log('Request body:', req.body);
+      console.log('Validation errors:', errors.array());
+      console.log('File info:', req.file);
+      
       if (!errors.isEmpty()) {
+        console.log('Returning validation errors');
         return res.status(400).json({ errors: errors.array() });
       }
 
       const { name, position, bio_de, bio_en, goals_de, goals_en, email, social_links, is_active, color } = req.body;
+      console.log('Processing candidate data:', { name, position, bio_de, bio_en, goals_de, goals_en, email, social_links, is_active, color });
+      
       // Cloudinary returns the full URL in req.file.path
       const photo_url = req.file ? req.file.path : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&size=800&background=1f2937&color=fff&bold=true';
+      console.log('Photo URL:', photo_url);
       
       // Parse social_links if it's a string
       let parsedSocialLinks = {};
@@ -92,21 +111,24 @@ router.post('/',
         try {
           parsedSocialLinks = typeof social_links === 'string' ? JSON.parse(social_links) : social_links;
         } catch (e) {
+          console.log('Error parsing social links:', e);
           parsedSocialLinks = {};
         }
       }
+      console.log('Parsed social links:', parsedSocialLinks);
 
       const result = await pool.query(
         `INSERT INTO candidates (name, position, bio_de, bio_en, goals_de, goals_en, email, social_links, photo_url, is_active, color)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
          RETURNING *`,
-        [name, position, bio_de, bio_en, goals_de, goals_en, email, JSON.stringify(parsedSocialLinks), photo_url, is_active !== 'false', color || 'purple']
+        [name, position, bio_de, bio_en, goals_de || '', goals_en || '', email || '', JSON.stringify(parsedSocialLinks), photo_url, is_active !== 'false', color || 'purple']
       );
-
+      
+      console.log('Candidate created successfully:', result.rows[0]);
       res.status(201).json(result.rows[0]);
     } catch (error) {
       console.error('Error creating candidate:', error);
-      res.status(500).json({ error: 'Failed to create candidate' });
+      res.status(500).json({ error: 'Failed to create candidate', details: error.message });
     }
   }
 );
@@ -120,9 +142,19 @@ router.put('/:id',
     body('position').optional().trim().notEmpty(),
     body('bio_de').optional().trim().notEmpty(),
     body('bio_en').optional().trim().notEmpty(),
-    body('goals_de').optional().trim().notEmpty(),
-    body('goals_en').optional().trim().notEmpty(),
-    body('email').optional().isEmail()
+    body('goals_de').optional().custom((value) => {
+      if (value === undefined || value === null || value === '') {
+        return true; // Allow empty values
+      }
+      return typeof value === 'string' && value.trim().length > 0;
+    }).withMessage('German goals must be a non-empty string if provided'),
+    body('goals_en').optional().custom((value) => {
+      if (value === undefined || value === null || value === '') {
+        return true; // Allow empty values
+      }
+      return typeof value === 'string' && value.trim().length > 0;
+    }).withMessage('English goals must be a non-empty string if provided'),
+    body('email').optional().isEmail().withMessage('Valid email is required')
   ],
   async (req, res) => {
     try {
@@ -163,15 +195,15 @@ router.put('/:id',
       }
       if (goals_de !== undefined) {
         updates.push(`goals_de = $${paramCount++}`);
-        values.push(goals_de);
+        values.push(goals_de || '');
       }
       if (goals_en !== undefined) {
         updates.push(`goals_en = $${paramCount++}`);
-        values.push(goals_en);
+        values.push(goals_en || '');
       }
       if (email !== undefined) {
         updates.push(`email = $${paramCount++}`);
-        values.push(email);
+        values.push(email || '');
       }
       if (social_links !== undefined) {
         let parsedSocialLinks = {};

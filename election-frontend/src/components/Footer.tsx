@@ -9,15 +9,15 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-charcoal text-white mt-32">
-      <div className="container mx-auto px-8 sm:px-12 lg:px-20 xl:px-32 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-12 sm:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 items-start">
           {/* Branding with Starburst */}
           <div className="md:col-span-4">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">
                 <Starburst color="purple" size="sm" className="text-purple-light" />
               </div>
-              <h3 className="font-heading font-black text-xl">
+              <h3 className="font-heading font-black text-lg sm:text-xl">
                 {language === 'de' ? 'NEUE LISTE' : 'NEW LIST'}
               </h3>
             </div>
@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
                 ? 'Miteinander - Füreinander. Unabhängig. Modern. Mutig.'
                 : 'Together - For Each Other. Independent. Modern. Courageous.'}
             </p>
-            <div className="mt-6 flex items-center gap-3 text-sm">
+            <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3 text-sm">
               <div className="flex items-center gap-2 text-gray-400">
                 <CalendarIcon className="w-4 h-4" />
                 <span className="font-medium">15. März 2025</span>
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
             <div className="space-y-2.5 text-sm">
               <a href="mailto:info@election2025.com" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
                 <EnvelopeIcon className="w-4 h-4" />
-                <span>info@election2025.com</span>
+                <span>xxx@election2025.com</span>
               </a>
               <a href="tel:+491234567890" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
                 <PhoneIcon className="w-4 h-4" />
@@ -68,7 +68,7 @@ const Footer: React.FC = () => {
               </a>
               <div className="flex items-center gap-2 text-gray-400">
                 <MapPinIcon className="w-4 h-4" />
-                <span>Berlin, Germany</span>
+                <span>Hamburg, Germany</span>
               </div>
             </div>
           </div>
@@ -98,6 +98,18 @@ const Footer: React.FC = () => {
           <div className="flex gap-6 text-xs">
             <Link to="/privacy" className="text-gray-500 hover:text-white transition-colors">{t.footer.privacy}</Link>
             <Link to="/legal" className="text-gray-500 hover:text-white transition-colors">{t.footer.legalNotice}</Link>
+          </div>
+        </div>
+
+        {/* Dev Credits */}
+        <div className="border-t border-gray-800 mt-6 pt-6 flex flex-col sm:flex-row justify-center items-center gap-4">
+          <div className="bg-charcoal-light p-3 rounded-lg">
+            <p className="text-yellow-400 text-sm sm:text-base flex items-center font-bold">
+              Crafted with <span className="text-red-500 mx-2 text-lg">♥</span> in Digilab | LSBG by 
+              <a href="http://nizamuddinsyed.github.io/" target="_blank" rel="noopener noreferrer" className="ml-1 text-yellow-400 hover:text-white transition-colors underline font-bold">
+                Nizam Syed
+              </a>
+            </p>
           </div>
         </div>
       </div>

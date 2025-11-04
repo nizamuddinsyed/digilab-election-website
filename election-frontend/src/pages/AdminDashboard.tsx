@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { candidatesAPI, authAPI, Candidate, Stats } from '../services/api';
+import { candidatesAPI, policiesAPI, basicTopicsAPI, faqsAPI, eventsAPI, authAPI, Candidate, Policy, BasicTopic, FAQ, Event, Stats } from '../services/api';
+import AdminPoliciesSection from '../components/AdminPoliciesSection';
+import AdminBasicTopicsSection from '../components/AdminBasicTopicsSection';
+import AdminFAQsSection from '../components/AdminFAQsSection';
+import AdminEventsSection from '../components/AdminEventsSection';
 import {
   PlusIcon,
   PencilIcon,
@@ -17,12 +21,17 @@ const AdminDashboard: React.FC = () => {
   const { language, t } = useLanguage();
   const navigate = useNavigate();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [policies, setPolicies] = useState<Policy[]>([]);
+  const [basicTopics, setBasicTopics] = useState<BasicTopic[]>([]);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [stats, setStats] = useState<Stats>({ total: 0, active: 0, inactive: 0 });
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingCandidate, setEditingCandidate] = useState<Candidate | null>(null);
   const [deleteCandidate, setDeleteCandidate] = useState<Candidate | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState<'candidates' | 'policies' | 'basicTopics' | 'faqs' | 'events'>('candidates');
   const candidatesPerPage = 9; // 3x3 grid
 
   useEffect(() => {
@@ -40,12 +49,20 @@ const AdminDashboard: React.FC = () => {
 
   const loadData = async () => {
     try {
-      const [candidatesData, statsData] = await Promise.all([
+      const [candidatesData, statsData, policiesData, basicTopicsData, faqsData, eventsData] = await Promise.all([
         candidatesAPI.getAll(),
         candidatesAPI.getStats(),
+        policiesAPI.getAllAdmin(),
+        basicTopicsAPI.getAllAdmin(),
+        faqsAPI.getAllAdmin(),
+        eventsAPI.getAllAdmin(),
       ]);
       setCandidates(candidatesData);
       setStats(statsData);
+      setPolicies(policiesData);
+      setBasicTopics(basicTopicsData);
+      setFaqs(faqsData);
+      setEvents(eventsData);
     } catch (error) {
       console.error('Failed to load data:', error);
     } finally {
@@ -125,148 +142,219 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-8 sm:px-12 lg:px-20 xl:px-32 py-16">
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
-          <div className="bg-white rounded-3xl p-8 border-2 border-beige-dark hover:border-charcoal transition-all">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-sm font-bold text-charcoal-light uppercase tracking-wider mb-2">{t.admin.totalCandidates}</p>
-                <p className="text-5xl font-black text-charcoal">{stats.total}</p>
-              </div>
-              <div className="w-16 h-16 bg-charcoal rounded-2xl flex items-center justify-center">
-                <UserGroupIcon className="w-9 h-9 text-white" />
-              </div>
-            </div>
-            <p className="text-sm text-charcoal-light font-medium">All candidates</p>
-          </div>
-          <div className="bg-white rounded-3xl p-8 border-2 border-beige-dark hover:border-charcoal transition-all">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-sm font-bold text-charcoal-light uppercase tracking-wider mb-2">{t.admin.activeCandidates}</p>
-                <p className="text-5xl font-black text-charcoal">{stats.active}</p>
-              </div>
-              <div className="w-16 h-16 bg-teal rounded-2xl flex items-center justify-center">
-                <CheckCircleIcon className="w-9 h-9 text-white" />
-              </div>
-            </div>
-            <p className="text-sm text-charcoal-light font-medium">Currently active</p>
-          </div>
-          <div className="bg-white rounded-3xl p-8 border-2 border-beige-dark hover:border-charcoal transition-all">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-sm font-bold text-charcoal-light uppercase tracking-wider mb-2">{t.admin.inactiveCandidates}</p>
-                <p className="text-5xl font-black text-charcoal">{stats.inactive}</p>
-              </div>
-              <div className="w-16 h-16 bg-silver rounded-2xl flex items-center justify-center">
-                <XCircleIcon className="w-9 h-9 text-white" />
-              </div>
-            </div>
-            <p className="text-sm text-charcoal-light font-medium">Currently inactive</p>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="font-heading font-black text-3xl text-charcoal">
-              {t.admin.manageCandidates}
-            </h2>
-            <p className="text-charcoal-light mt-1">View and manage all candidates</p>
-          </div>
+        {/* Tabs */}
+        <div className="flex gap-4 mb-12 border-b-2 border-beige-dark">
           <button
-            onClick={handleAdd}
-            className="inline-flex items-center px-8 py-4 bg-charcoal hover:bg-charcoal-light text-white font-bold rounded-2xl transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+            onClick={() => { setActiveTab('candidates'); setCurrentPage(1); }}
+            className={`pb-4 px-6 font-bold uppercase tracking-wider border-b-4 transition-all ${
+              activeTab === 'candidates'
+                ? 'border-charcoal text-charcoal'
+                : 'border-transparent text-charcoal-light hover:text-charcoal'
+            }`}
           >
-            <PlusIcon className="w-5 h-5 mr-2" />
-            {t.admin.addCandidate}
+            {t.admin.candidates}
+          </button>
+          <button
+            onClick={() => { setActiveTab('policies'); setCurrentPage(1); }}
+            className={`pb-4 px-6 font-bold uppercase tracking-wider border-b-4 transition-all ${
+              activeTab === 'policies'
+                ? 'border-charcoal text-charcoal'
+                : 'border-transparent text-charcoal-light hover:text-charcoal'
+            }`}
+          >
+            {t.nav.mainGoals}
+          </button>
+          <button
+            onClick={() => { setActiveTab('basicTopics'); setCurrentPage(1); }}
+            className={`pb-4 px-6 font-bold uppercase tracking-wider border-b-4 transition-all ${
+              activeTab === 'basicTopics'
+                ? 'border-charcoal text-charcoal'
+                : 'border-transparent text-charcoal-light hover:text-charcoal'
+            }`}
+          >
+            {t.nav.basicTopics}
+          </button>
+          <button
+            onClick={() => { setActiveTab('faqs'); setCurrentPage(1); }}
+            className={`pb-4 px-6 font-bold uppercase tracking-wider border-b-4 transition-all ${
+              activeTab === 'faqs'
+                ? 'border-charcoal text-charcoal'
+                : 'border-transparent text-charcoal-light hover:text-charcoal'
+            }`}
+          >
+            {t.nav.faq}
+          </button>
+          <button
+            onClick={() => { setActiveTab('events'); setCurrentPage(1); }}
+            className={`pb-4 px-6 font-bold uppercase tracking-wider border-b-4 transition-all ${
+              activeTab === 'events'
+                ? 'border-charcoal text-charcoal'
+                : 'border-transparent text-charcoal-light hover:text-charcoal'
+            }`}
+          >
+            {t.nav.events}
           </button>
         </div>
 
-        {/* Candidates Cards - All Devices */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {paginatedCandidates.map((candidate) => (
-            <div key={candidate.id} className="bg-white rounded-2xl p-6 shadow-lg border-2 border-beige-dark hover:border-charcoal hover:shadow-xl transition-all">
-              <div className="flex items-start gap-4 mb-5">
-                <img
-                  src={getPhotoUrl(candidate.photo_url)}
-                  alt={candidate.name}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover border-2 border-beige-dark flex-shrink-0"
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-charcoal truncate">{candidate.name}</h3>
-                  <p className="text-sm text-charcoal-light truncate">{candidate.position}</p>
+        {/* Candidates Tab */}
+        {activeTab === 'candidates' && (
+          <>
+            {/* Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
+              <div className="bg-white rounded-3xl p-8 border-2 border-beige-dark hover:border-charcoal transition-all">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-sm font-bold text-charcoal-light uppercase tracking-wider mb-2">{t.admin.totalCandidates}</p>
+                    <p className="text-5xl font-black text-charcoal">{stats.total}</p>
+                  </div>
+                  <div className="w-16 h-16 bg-charcoal rounded-2xl flex items-center justify-center">
+                    <UserGroupIcon className="w-9 h-9 text-white" />
+                  </div>
                 </div>
+                <p className="text-sm text-charcoal-light font-medium">All candidates</p>
               </div>
-              
-              <div className="flex items-center justify-between mb-4 pb-4 border-b-2 border-beige-light">
-                <span className="text-xs font-bold text-charcoal-light uppercase tracking-wider">Status</span>
-                {candidate.is_active ? (
-                  <span className="px-3 py-1 text-xs font-bold rounded-full bg-teal text-white uppercase tracking-wider">
-                    {t.candidates.active}
-                  </span>
-                ) : (
-                  <span className="px-3 py-1 text-xs font-bold rounded-full bg-silver text-charcoal uppercase tracking-wider">
-                    {t.candidates.inactive}
-                  </span>
-                )}
+              <div className="bg-white rounded-3xl p-8 border-2 border-beige-dark hover:border-charcoal transition-all">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-sm font-bold text-charcoal-light uppercase tracking-wider mb-2">{t.admin.activeCandidates}</p>
+                    <p className="text-5xl font-black text-charcoal">{stats.active}</p>
+                  </div>
+                  <div className="w-16 h-16 bg-teal rounded-2xl flex items-center justify-center">
+                    <CheckCircleIcon className="w-9 h-9 text-white" />
+                  </div>
+                </div>
+                <p className="text-sm text-charcoal-light font-medium">Currently active</p>
               </div>
-              
-              <div className="flex gap-2 flex-col sm:flex-row">
-                <button
-                  onClick={() => handleEdit(candidate)}
-                  className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-3 bg-charcoal text-white font-bold rounded-xl hover:bg-charcoal-light transition-all text-xs sm:text-sm whitespace-nowrap"
-                >
-                  <PencilIcon className="w-4 h-4" />
-                  <span>Edit</span>
-                </button>
-                <button
-                  onClick={() => handleDelete(candidate)}
-                  className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-3 border-2 border-red-500 text-red-500 font-bold rounded-xl hover:bg-red-50 transition-all text-xs sm:text-sm whitespace-nowrap"
-                >
-                  <TrashIcon className="w-4 h-4" />
-                  <span>Delete</span>
-                </button>
+              <div className="bg-white rounded-3xl p-8 border-2 border-beige-dark hover:border-charcoal transition-all">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-sm font-bold text-charcoal-light uppercase tracking-wider mb-2">{t.admin.inactiveCandidates}</p>
+                    <p className="text-5xl font-black text-charcoal">{stats.inactive}</p>
+                  </div>
+                  <div className="w-16 h-16 bg-silver rounded-2xl flex items-center justify-center">
+                    <XCircleIcon className="w-9 h-9 text-white" />
+                  </div>
+                </div>
+                <p className="text-sm text-charcoal-light font-medium">Currently inactive</p>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-12 flex-wrap">
-            <button
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="px-4 py-2 bg-charcoal text-white font-bold rounded-xl hover:bg-charcoal-light disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-            >
-              ← Previous
-            </button>
-            
-            <div className="flex gap-1">
-              {Array.from({ length: totalPages }).map((_, index) => (
-                <button
-                  key={index + 1}
-                  onClick={() => setCurrentPage(index + 1)}
-                  className={`w-10 h-10 rounded-xl font-bold transition-all ${
-                    currentPage === index + 1
-                      ? 'bg-charcoal text-white'
-                      : 'bg-white text-charcoal border-2 border-beige-dark hover:border-charcoal'
-                  }`}
-                >
-                  {index + 1}
-                </button>
+            {/* Candidates Tab Content */}
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h2 className="font-heading font-black text-3xl text-charcoal">
+                  {t.admin.manageCandidates}
+                </h2>
+                <p className="text-charcoal-light mt-1">View and manage all candidates</p>
+              </div>
+              <button
+                onClick={handleAdd}
+                className="inline-flex items-center px-8 py-4 bg-charcoal hover:bg-charcoal-light text-white font-bold rounded-2xl transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+              >
+                <PlusIcon className="w-5 h-5 mr-2" />
+                {t.admin.addCandidate}
+              </button>
+            </div>
+
+            {/* Candidates Cards - All Devices */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {paginatedCandidates.map((candidate) => (
+                <div key={candidate.id} className="bg-white rounded-2xl p-6 shadow-lg border-2 border-beige-dark hover:border-charcoal hover:shadow-xl transition-all">
+                  <div className="flex items-start gap-4 mb-5">
+                    <img
+                      src={getPhotoUrl(candidate.photo_url)}
+                      alt={candidate.name}
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover border-2 border-beige-dark flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold text-charcoal truncate">{candidate.name}</h3>
+                      <p className="text-sm text-charcoal-light truncate">{candidate.position}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mb-4 pb-4 border-b-2 border-beige-light">
+                    <span className="text-xs font-bold text-charcoal-light uppercase tracking-wider">Status</span>
+                    {candidate.is_active ? (
+                      <span className="px-3 py-1 text-xs font-bold rounded-full bg-teal text-white uppercase tracking-wider">
+                        {t.candidates.active}
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1 text-xs font-bold rounded-full bg-silver text-charcoal uppercase tracking-wider">
+                        {t.candidates.inactive}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="flex gap-2 flex-col sm:flex-row">
+                    <button
+                      onClick={() => handleEdit(candidate)}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-3 bg-charcoal text-white font-bold rounded-xl hover:bg-charcoal-light transition-all text-xs sm:text-sm whitespace-nowrap"
+                    >
+                      <PencilIcon className="w-4 h-4" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(candidate)}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-3 border-2 border-red-500 text-red-500 font-bold rounded-xl hover:bg-red-50 transition-all text-xs sm:text-sm whitespace-nowrap"
+                    >
+                      <TrashIcon className="w-4 h-4" />
+                      <span>Delete</span>
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
-            
-            <button
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-charcoal text-white font-bold rounded-xl hover:bg-charcoal-light disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-            >
-              Next →
-            </button>
-          </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-12 flex-wrap">
+                <button
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-charcoal text-white font-bold rounded-xl hover:bg-charcoal-light disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  ← Previous
+                </button>
+                
+                <div className="flex gap-1">
+                  {Array.from({ length: totalPages }).map((_, index) => (
+                    <button
+                      key={index + 1}
+                      onClick={() => setCurrentPage(index + 1)}
+                      className={`w-10 h-10 rounded-xl font-bold transition-all ${
+                        currentPage === index + 1
+                          ? 'bg-charcoal text-white'
+                          : 'bg-white text-charcoal border-2 border-beige-dark hover:border-charcoal'
+                      }`}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-charcoal text-white font-bold rounded-xl hover:bg-charcoal-light disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+          </>
         )}
+
+        {/* Policies Tab */}
+        {activeTab === 'policies' && <AdminPoliciesSection policies={policies} onRefresh={loadData} />}
+
+        {/* Basic Topics Tab */}
+        {activeTab === 'basicTopics' && <AdminBasicTopicsSection basicTopics={basicTopics} onRefresh={loadData} />}
+
+        {/* FAQs Tab */}
+        {activeTab === 'faqs' && <AdminFAQsSection faqs={faqs} onRefresh={loadData} />}
+
+        {/* Events Tab */}
+        {activeTab === 'events' && <AdminEventsSection events={events} onRefresh={loadData} />}
       </div>
 
       {/* Modal */}
@@ -301,7 +389,7 @@ const CandidateModal: React.FC<CandidateModalProps> = ({ candidate, onClose, onS
     bio_en: candidate?.bio_en || '',
     goals_de: candidate?.goals_de || '',
     goals_en: candidate?.goals_en || '',
-    email: candidate?.email || '',
+    // Email field removed as contact info is no longer needed
     is_active: candidate?.is_active !== false,
     color: candidate?.color || 'purple',
   });
@@ -325,9 +413,10 @@ const CandidateModal: React.FC<CandidateModalProps> = ({ candidate, onClose, onS
       data.append('position', formData.position);
       data.append('bio_de', formData.bio_de);
       data.append('bio_en', formData.bio_en);
-      data.append('goals_de', formData.goals_de);
-      data.append('goals_en', formData.goals_en);
-      data.append('email', formData.email);
+      // Goals fields are no longer sent separately as they're included in biography
+      // data.append('goals_de', formData.goals_de);
+      // data.append('goals_en', formData.goals_en);
+      // Email field removed as contact info is no longer needed
       data.append('is_active', String(formData.is_active));
       data.append('color', formData.color);
       
@@ -401,19 +490,6 @@ const CandidateModal: React.FC<CandidateModalProps> = ({ candidate, onClose, onS
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-charcoal mb-2 uppercase tracking-wider">
-                {t.admin.email} *
-              </label>
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-4 border-2 border-beige-dark rounded-2xl focus:outline-none focus:border-charcoal transition-all font-heading"
-              />
-            </div>
-            
-            <div>
               <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wider">
                 {t.admin.photo}
               </label>
@@ -444,53 +520,57 @@ const CandidateModal: React.FC<CandidateModalProps> = ({ candidate, onClose, onS
           
           <div>
             <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wider">
-              {t.admin.bioDE} *
+              {t.admin.bioDE} * (Include goals here as bullet points)
             </label>
             <textarea
               required
-              rows={4}
+              rows={6}
               value={formData.bio_de}
               onChange={(e) => setFormData({ ...formData, bio_de: e.target.value })}
               className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-gray-900 transition-all"
+              placeholder="Enter biography and goals as bullet points"
             />
           </div>
           
           <div>
             <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wider">
-              {t.admin.bioEN} *
+              {t.admin.bioEN} * (Include goals here as bullet points)
             </label>
             <textarea
               required
-              rows={4}
+              rows={6}
               value={formData.bio_en}
               onChange={(e) => setFormData({ ...formData, bio_en: e.target.value })}
               className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-gray-900 transition-all"
+              placeholder="Enter biography and goals as bullet points"
             />
           </div>
           
-          <div>
+          <div className="hidden">
             <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wider">
-              {t.admin.goalsDE} * (one per line)
+              {t.admin.goalsDE} (Goals now included in biography)
             </label>
             <textarea
-              required
               rows={4}
               value={formData.goals_de}
               onChange={(e) => setFormData({ ...formData, goals_de: e.target.value })}
               className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-gray-900 transition-all"
+              placeholder="Goals are now part of biography"
+              disabled
             />
           </div>
           
-          <div>
+          <div className="hidden">
             <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wider">
-              {t.admin.goalsEN} * (one per line)
+              {t.admin.goalsEN} (Goals now included in biography)
             </label>
             <textarea
-              required
               rows={4}
               value={formData.goals_en}
               onChange={(e) => setFormData({ ...formData, goals_en: e.target.value })}
               className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-gray-900 transition-all"
+              placeholder="Goals are now part of biography"
+              disabled
             />
           </div>
           
