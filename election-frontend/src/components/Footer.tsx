@@ -104,9 +104,13 @@ const Footer: React.FC = () => {
         {/* Dev Credits */}
         <div className="border-t border-gray-800 mt-6 pt-6 flex flex-col sm:flex-row justify-center items-center gap-4">
           <div className="bg-charcoal-light p-3 rounded-lg">
-            <p className="text-yellow-400 text-sm sm:text-base flex items-center font-bold">
-              Crafted with <span className="text-red-500 mx-2 text-lg">♥</span> in Digilab | LSBG by 
-              <a href="http://nizamuddinsyed.github.io/" target="_blank" rel="noopener noreferrer" className="ml-1 text-yellow-400 hover:text-white transition-colors underline font-bold">
+            <p className="text-gray-400 text-sm flex flex-col sm:flex-row items-center justify-center text-center">
+              <span className="flex items-center">
+                Crafted with 
+                <span className="text-red-500 mx-2">♥</span> 
+                in Digilab | LSBG by
+              </span>
+              <a href="http://nizamuddinsyed.github.io/" target="_blank" rel="noopener noreferrer" className="ml-0 sm:ml-1 mt-1 sm:mt-0 text-gray-400 hover:text-white transition-colors">
                 Nizam Syed
               </a>
             </p>
