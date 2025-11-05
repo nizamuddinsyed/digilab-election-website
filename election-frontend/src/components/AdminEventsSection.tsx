@@ -124,10 +124,14 @@ const AdminEventsSection: React.FC<AdminEventsSectionProps> = ({ events, onRefre
                 <div className="flex flex-wrap items-center gap-3 mb-2">
                   <h3 className="font-heading font-bold text-lg text-charcoal">{event.title_en}</h3>
                   <span className="px-3 py-1 bg-purple text-white text-xs font-bold rounded-full">
-                    {event.event_date}
+                    {new Date(event.event_date).toLocaleDateString('de-DE', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric'
+                    })}
                   </span>
                   <span className="px-3 py-1 bg-teal text-white text-xs font-bold rounded-full">
-                    {event.event_time}
+                    {event.event_time.length > 5 ? event.event_time.substring(0, 5) : event.event_time}
                   </span>
                 </div>
                 <p className="text-sm text-charcoal-light mb-2">{event.location_en}</p>

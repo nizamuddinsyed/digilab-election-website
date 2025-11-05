@@ -79,9 +79,9 @@ const HomePage: React.FC = () => {
           {/* Main Content */}
           <div className="max-w-6xl mx-auto text-center space-y-12">
             {/* Animated ELECTION 2025 Badge */}
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-purple via-teal to-silver text-white text-sm font-bold uppercase tracking-wider animate-pulse shadow-lg">
-              <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div>
-              <span>{language === 'de' ? 'WAHL 2025' : 'ELECTION 2025'}</span>
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-purple via-teal to-silver text-black text-sm font-bold uppercase tracking-wider animate-pulse shadow-lg">
+              <div className="w-2 h-2 rounded-full bg-black animate-pulse"></div>
+              <span>{language === 'de' ? 'Wann? am 26. November 2025 - BR 0.01 Freihafen' : 'When? November 26, 2025 - BR 0.01 Freihafen'}</span>
             </div>
 
             {/* Heading - Poster Style */}
@@ -100,6 +100,16 @@ const HomePage: React.FC = () => {
                 ? 'Miteinander - Füreinander. Es ist Zeit für eine Veränderung.'
                 : 'Together - For Each Other. It\'s Time for Change.'}
             </p>
+
+            {/* New Highlighted Information */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto border-2 border-charcoal-light">
+              <p className="font-heading font-bold text-lg sm:text-xl text-charcoal">
+                {language === 'de' ? 'Arbeitnehmerliste Nr. 4' : 'Employee List No. 4'}
+              </p>
+              <p className="font-heading font-bold text-lg sm:text-xl text-charcoal mt-2">
+                {language === 'de' ? 'Beamtenliste Nr. 5' : 'Civil Servant List No. 5'}
+              </p>
+            </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-12">
@@ -160,9 +170,11 @@ const HomePage: React.FC = () => {
                     <h3 className="font-heading font-bold text-xl sm:text-2xl text-charcoal">
                       {feature.title}
                     </h3>
-                    <p className="font-heading text-charcoal-light leading-relaxed text-sm sm:text-base">
-                      {feature.description}
-                    </p>
+                    {feature.description && (
+                      <p className="font-heading text-charcoal-light leading-relaxed text-sm sm:text-base">
+                        {feature.description}
+                      </p>
+                    )}
                   </Link>
                 );
               })}

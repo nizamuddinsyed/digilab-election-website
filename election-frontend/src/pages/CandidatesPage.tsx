@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { candidatesAPI, Candidate } from '../services/api';
-import { UserIcon, MagnifyingGlassIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { UserIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import Starburst from '../components/Starburst';
 
 const CandidatesPage: React.FC = () => {
@@ -10,15 +10,14 @@ const CandidatesPage: React.FC = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [filteredCandidates, setFilteredCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     loadCandidates();
   }, []);
 
   useEffect(() => {
-    filterCandidates();
-  }, [candidates, searchTerm]);
+    setFilteredCandidates(candidates);
+  }, [candidates]);
 
   const loadCandidates = async () => {
     try {
@@ -29,22 +28,6 @@ const CandidatesPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const filterCandidates = () => {
-    let filtered = candidates;
-    
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filtered = candidates.filter(candidate => 
-        candidate.name.toLowerCase().includes(term) ||
-        candidate.position.toLowerCase().includes(term) ||
-        candidate.bio_de.toLowerCase().includes(term) ||
-        candidate.bio_en.toLowerCase().includes(term)
-      );
-    }
-    
-    setFilteredCandidates(filtered);
   };
 
   const handleShuffle = () => {
@@ -75,28 +58,12 @@ const CandidatesPage: React.FC = () => {
       <div className="container mx-auto px-8 sm:px-12 lg:px-20 xl:px-32 relative z-10">
         {/* Page Header */}
         <div className="text-center mb-20">
-          <h1 className="font-heading font-black text-6xl sm:text-7xl text-charcoal mb-6 tracking-tight">
+          <h1 className="font-heading font-black text-5xl sm:text-6xl md:text-7xl text-charcoal mb-6 tracking-tight">
             {t.candidates.title}
           </h1>
-          <p className="font-heading text-xl text-charcoal-light max-w-3xl mx-auto">
+          <p className="font-heading text-lg sm:text-xl text-charcoal-light max-w-4xl mx-auto whitespace-pre-line">
             {t.candidates.subtitle}
           </p>
-        </div>
-
-        {/* Search */}
-        <div className="max-w-2xl mx-auto mb-20">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-              <MagnifyingGlassIcon className="h-6 w-6 text-charcoal-light" />
-            </div>
-            <input
-              type="text"
-              className="block w-full pl-16 pr-6 py-5 border-2 border-beige-dark rounded-2xl bg-white focus:outline-none focus:border-charcoal font-heading text-lg transition-all"
-              placeholder={t.candidates.search}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
         </div>
 
         {loading ? (
@@ -107,22 +74,14 @@ const CandidatesPage: React.FC = () => {
           <div className="text-center py-32">
             <UserIcon className="w-20 h-20 text-gray-300 mx-auto mb-6" />
             <h3 className="font-heading font-bold text-2xl text-charcoal mb-3">
-              {searchTerm ? t.candidates.noMatching : t.candidates.noCandidates}
+              {t.candidates.noCandidates}
             </h3>
-            {searchTerm && (
-              <button 
-                onClick={() => setSearchTerm('')}
-                className="text-charcoal-light hover:text-charcoal font-medium underline"
-              >
-                {t.candidates.clearSearch}
-              </button>
-            )}
           </div>
         ) : (
           <>
             <div className="flex justify-between items-center mb-12">
               <p className="font-heading text-charcoal-light text-lg">
-                <span className="font-bold text-charcoal">{filteredCandidates.length}</span> of {candidates.length} candidates
+                <span className="font-bold text-charcoal">{filteredCandidates.length}</span> {language === 'de' ? 'Kandidaten' : 'candidates'}
               </p>
               <button
                 onClick={handleShuffle}

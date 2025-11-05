@@ -4,8 +4,8 @@ export const translations = {
     nav: {
       home: 'Startseite',
       candidates: 'Kandidaten',
-      mainGoals: '5 Hauptziele',
-      basicTopics: 'Grundlegende Themen',
+      mainGoals: 'Unsere 5 Hauptziele',
+      basicTopics: 'Unsere Themen-Schwerpunkte',
       faq: 'FAQ',
       events: 'Termine',
       admin: 'Admin',
@@ -22,8 +22,8 @@ export const translations = {
     
     // Candidates Section
     candidates: {
-      title: 'Unsere Kandidaten',
-      subtitle: 'Lernen Sie die Menschen kennen, die für Ihre Zukunft arbeiten',
+      title: 'Mehr als Foto und Name - Wir stellen uns vor.',
+      subtitle: 'Wir sind die "Neue Liste": engagierte Kollegn:innen aus unterschiedlichen Bereichen,\ndie den Alltag hier kennen - mit all seinen Stärken und Baustellen.\nSchau Dich um, lerne uns kennen - und sprich uns an, wenn du Fragen hast.\nDeine Stimme zählt.',
       active: 'Aktiv',
       inactive: 'Inaktiv',
       viewProfile: 'Profil ansehen',
@@ -41,14 +41,14 @@ export const translations = {
     
     // Features Section
     features: {
-      whyParticipate: 'Warum teilnehmen?',
-      whyParticipateSubtitle: 'Ihre Stimme gestaltet die Zukunft. Hier erfahren Sie, wie diese Plattform Ihnen hilft, eine fundierte Entscheidung zu treffen.',
-      feature1Title: 'Lernen Sie die Kandidaten kennen',
-      feature1Description: 'Informieren Sie sich über den Hintergrund und die Qualifikationen jedes Kandidaten',
-      feature2Title: 'Wichtigste Programme',
-      feature2Description: 'Entdecken Sie die wichtigsten Richtlinien und Initiativen jedes Kandidaten',
-      feature3Title: 'Engagieren Sie sich',
-      feature3Description: 'Vernetzen Sie sich mit Kandidaten und nehmen Sie am demokratischen Prozess teil',
+      whyParticipate: 'Willkommen bei der Neuen Liste',
+      whyParticipateSubtitle: 'Lernt unsere Kandidat:innen kennen, entdeckt unsere Ziele und Themenschwerpunkte und\nvereinbart bei Interesse direkt einen Termin',
+      feature1Title: 'Kandidaten',
+      feature1Description: '',
+      feature2Title: 'Ziele',
+      feature2Description: '',
+      feature3Title: 'FAQ',
+      feature3Description: '',
     },
     
     // Footer
@@ -121,8 +121,8 @@ export const translations = {
     nav: {
       home: 'Home',
       candidates: 'Candidates',
-      mainGoals: '5 Main Goals',
-      basicTopics: 'Basic Topics',
+      mainGoals: 'Our 5 Main Goals',
+      basicTopics: 'Our Key Topics',
       faq: 'FAQ',
       events: 'Events',
       admin: 'Admin',
@@ -139,8 +139,8 @@ export const translations = {
     
     // Candidates Section
     candidates: {
-      title: 'Our Candidates',
-      subtitle: 'Meet the people working for your future',
+      title: 'More Than Photo and Name - We Introduce Ourselves',
+      subtitle: 'We are the "New List": engaged colleagues from different areas,\nwho know the everyday life here - with all its strengths and areas for improvement.\nLook around, get to know us - and talk to us if you have questions.\nYour voice matters.',
       active: 'Active',
       inactive: 'Inactive',
       viewProfile: 'View Profile',
@@ -158,14 +158,14 @@ export const translations = {
     
     // Features Section
     features: {
-      whyParticipate: 'Why Participate?',
-      whyParticipateSubtitle: 'Your vote shapes the future. Here\'s how this platform helps you make an informed decision.',
-      feature1Title: 'Meet the Candidates',
-      feature1Description: 'Learn about each candidate\'s background and qualifications',
+      whyParticipate: 'Welcome to the New List',
+      whyParticipateSubtitle: 'Get to know our candidates, discover our goals and key topics, and\nschedule an appointment directly if interested',
+      feature1Title: 'Candidates',
+      feature1Description: '',
       feature2Title: 'Key Policies',
-      feature2Description: 'Discover the main policies and initiatives of each candidate',
+      feature2Description: '',
       feature3Title: 'Engage',
-      feature3Description: 'Connect with candidates and participate in the democratic process',
+      feature3Description: '',
     },
     
     // Footer

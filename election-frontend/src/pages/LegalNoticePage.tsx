@@ -7,70 +7,46 @@ const LegalNoticePage: React.FC = () => {
 
   const contentDE = {
     title: 'Impressum',
-    lastUpdated: 'Stand: Januar 2025',
+    lastUpdated: 'Stand: November 2025',
     sections: [
       {
-        title: 'Angaben gemäß § 5 TMG',
-        content: 'Election Candidates 2025\nMusterstraße 123\n10115 Berlin\nDeutschland'
+        title: 'Angaben gemäß § 5 TMG und § 18 Abs. 2 MStV',
+        content: 'Neue Liste\nVertreten durch: Shafi Sediqi\nSachsenfeld 3–5\n20097 Hamburg\nDeutschland'
       },
       {
         title: 'Kontakt',
-        content: 'Telefon: +49 123 456 7890\nE-Mail: info@election2025.com'
+        content: 'Telefon: 040 42826 2624\nE-Mail: neueliste@lsbg.hamburg.de'
       },
       {
-        title: 'Vertreten durch',
-        content: 'Max Mustermann\nWahlleiter Election 2025'
+        title: 'Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV',
+        content: 'Shafi Sediqi\nSachsenfeld 3–5\n20097 Hamburg'
       },
       {
-        title: 'Urheberrecht - Kandidatenfotos',
-        content: 'Alle auf dieser Website verwendeten Fotografien von Kandidaten sind urheberrechtlich geschützt. Die Rechte an den Bildern liegen bei den jeweiligen Kandidaten oder deren Fotografen. Die Verwendung der Bilder erfolgt mit ausdrücklicher Genehmigung der abgebildeten Personen ausschließlich zum Zweck der Wahlkampfinformation.\n\nEine Weiterverwendung der Kandidatenfotos ohne Genehmigung ist nicht gestattet.'
-      },
-      {
-        title: 'Haftung für Inhalte',
-        content: 'Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.'
-      },
-      {
-        title: 'Haftung für Links',
-        content: 'Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.'
-      },
-      {
-        title: 'Urheberrecht',
-        content: 'Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.'
+        title: 'Hinweis zur Verantwortlichkeit',
+        content: 'Diese Website dient der Information über die Personalratswahl und die Ziele der Liste Neue Liste im Landesbetrieb Straßen, Brücken und Gewässer Hamburg (LSBG).\nSie verfolgt keine kommerziellen Zwecke.'
       }
     ]
   };
 
   const contentEN = {
     title: 'Legal Notice',
-    lastUpdated: 'As of: January 2025',
+    lastUpdated: 'As of: November 2025',
     sections: [
       {
-        title: 'Information according to § 5 TMG',
-        content: 'Election Candidates 2025\nMusterstraße 123\n10115 Berlin\nGermany'
+        title: 'Information according to § 5 TMG and § 18 Abs. 2 MStV',
+        content: 'Neue Liste\nRepresented by: Shafi Sediqi\nSachsenfeld 3–5\n20097 Hamburg\nGermany'
       },
       {
         title: 'Contact',
-        content: 'Phone: +49 123 456 7890\nEmail: info@election2025.com'
+        content: 'Phone: 040 42826 2624\nEmail: neueliste@lsbg.hamburg.de'
       },
       {
-        title: 'Represented by',
-        content: 'Max Mustermann\nElection Director 2025'
+        title: 'Responsible for Content according to § 18 Abs. 2 MStV',
+        content: 'Shafi Sediqi\nSachsenfeld 3–5\n20097 Hamburg'
       },
       {
-        title: 'Copyright - Candidate Photos',
-        content: 'All photographs of candidates used on this website are protected by copyright. The rights to the images belong to the respective candidates or their photographers. The use of the images is done with the express permission of the depicted persons exclusively for the purpose of election campaign information.\n\nFurther use of candidate photos without permission is not permitted.'
-      },
-      {
-        title: 'Liability for Content',
-        content: 'As a service provider, we are responsible for our own content on these pages in accordance with general laws under § 7 para.1 TMG. However, according to §§ 8 to 10 TMG, we as a service provider are not obligated to monitor transmitted or stored third-party information.'
-      },
-      {
-        title: 'Liability for Links',
-        content: 'Our offer contains links to external third-party websites over whose content we have no influence. Therefore, we cannot assume any liability for this external content. The respective provider or operator of the pages is always responsible for the content of the linked pages.'
-      },
-      {
-        title: 'Copyright',
-        content: 'The content and works created by the site operators on these pages are subject to German copyright law. The duplication, processing, distribution, and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator.'
+        title: 'Note on Responsibility',
+        content: 'This website serves to inform about the works council election and the goals of the Neue Liste in the Hamburg State Authority for Roads, Bridges and Waterways (LSBG).\nIt does not pursue commercial purposes.'
       }
     ]
   };
@@ -116,19 +92,19 @@ const LegalNoticePage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-gray-700">
                 <EnvelopeIcon className="w-5 h-5 text-gray-900" />
-                <a href="mailto:info@election2025.com" className="hover:text-gray-900 transition-colors">
-                  info@election2025.com
+                <a href="mailto:neueliste@lsbg.hamburg.de" className="hover:text-gray-900 transition-colors">
+                  neueliste@lsbg.hamburg.de
                 </a>
               </div>
               <div className="flex items-center gap-3 text-gray-700">
                 <PhoneIcon className="w-5 h-5 text-gray-900" />
-                <a href="tel:+491234567890" className="hover:text-gray-900 transition-colors">
-                  +49 123 456 7890
+                <a href="tel:040428262624" className="hover:text-gray-900 transition-colors">
+                  040 42826 2624
                 </a>
               </div>
               <div className="flex items-center gap-3 text-gray-700">
                 <MapPinIcon className="w-5 h-5 text-gray-900" />
-                <span>Musterstraße 123, 10115 Berlin, {language === 'de' ? 'Deutschland' : 'Germany'}</span>
+                <span>Sachsenfeld 3–5, 20097 Hamburg, {language === 'de' ? 'Deutschland' : 'Germany'}</span>
               </div>
             </div>
           </div>

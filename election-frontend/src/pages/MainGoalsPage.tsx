@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { TrashIcon, PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import Starburst from '../components/Starburst';
 import { policiesAPI, Policy } from '../services/api';
 
@@ -8,6 +8,7 @@ const MainGoalsPage: React.FC = () => {
   const { language, t } = useLanguage();
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedPolicy, setExpandedPolicy] = useState<number | null>(null);
 
   useEffect(() => {
     loadPolicies();
@@ -24,10 +25,20 @@ const MainGoalsPage: React.FC = () => {
     }
   };
 
+  const togglePolicy = (id: number) => {
+    setExpandedPolicy(expandedPolicy === id ? null : id);
+  };
+
   const colorMap: { [key: string]: string } = {
     'purple': 'bg-purple',
     'silver': 'bg-silver',
     'teal': 'bg-teal'
+  };
+
+  const borderColorMap: { [key: string]: string } = {
+    'purple': 'border-purple',
+    'silver': 'border-silver',
+    'teal': 'border-teal'
   };
 
   return (
@@ -45,14 +56,14 @@ const MainGoalsPage: React.FC = () => {
 
       <div className="container mx-auto px-8 sm:px-12 lg:px-20 xl:px-32 relative z-10">
         {/* Page Header */}
-        <div className="text-center mb-20">
-          <h1 className="font-heading font-black text-6xl sm:text-7xl text-charcoal mb-6 tracking-tight">
-            {language === 'de' ? '5 Hauptziele' : '5 Main Goals'}
+        <div className="text-center mb-12">
+          <h1 className="font-heading font-black text-5xl sm:text-6xl md:text-7xl text-charcoal mb-6 tracking-tight">
+            {language === 'de' ? 'Unsere 5 Hauptziele' : 'Our 5 Main Goals'}
           </h1>
-          <p className="font-heading text-xl text-charcoal-light max-w-3xl mx-auto">
+          <p className="font-heading text-lg sm:text-xl text-charcoal-light max-w-4xl mx-auto whitespace-pre-line">
             {language === 'de'
-              ? 'Unsere 5 wichtigsten Ziele für eine bessere Zukunft'
-              : 'Our 5 main goals for a better future'}
+              ? 'Unsere fünf Ziele zeigen, wohin wir wollen:\ntransparentere PR-Arbeit, faire Rahmenbedingungen und wirksamer Schutz vor Diskriminierung.\nSie sind klar formuliert, auf euren Arbeitsalltag bezogen – und an ihnen könnt ihr uns messen.\nSchaut rein und gebt uns gern Rückmeldung.'
+              : 'Our five goals show where we want to go:\nmore transparent PR work, fair conditions, and effective protection against discrimination.\nThey are clearly formulated, related to your daily work - and you can measure us by them.\nTake a look and feel free to give us feedback.'}
           </p>
         </div>
 
@@ -61,18 +72,33 @@ const MainGoalsPage: React.FC = () => {
             <div className="w-16 h-16 border-4 border-charcoal border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="max-w-4xl mx-auto space-y-6">
             {policies.map((policy) => (
               <div
                 key={policy.id}
-                className={`${colorMap[policy.color]} rounded-2xl p-8 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-105`}
+                className={`bg-white rounded-2xl border-2 ${borderColorMap[policy.color]} shadow-lg overflow-hidden transition-all duration-300`}
               >
-                <h3 className="font-heading font-bold text-2xl mb-4">
-                  {language === 'de' ? policy.title_de : policy.title_en}
-                </h3>
-                <p className="font-heading text-white/90 leading-relaxed">
-                  {language === 'de' ? policy.description_de : policy.description_en}
-                </p>
+                <button
+                  onClick={() => togglePolicy(policy.id)}
+                  className={`w-full flex items-center justify-between p-6 text-left ${colorMap[policy.color]} text-white`}
+                >
+                  <h3 className="font-heading font-bold text-xl sm:text-2xl">
+                    {language === 'de' ? policy.title_de : policy.title_en}
+                  </h3>
+                  {expandedPolicy === policy.id ? (
+                    <ChevronUpIcon className="w-6 h-6" />
+                  ) : (
+                    <ChevronDownIcon className="w-6 h-6" />
+                  )}
+                </button>
+                
+                {expandedPolicy === policy.id && (
+                  <div className="p-6 bg-white">
+                    <p className="font-heading text-charcoal-light leading-relaxed whitespace-pre-line">
+                      {language === 'de' ? policy.description_de : policy.description_en}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>

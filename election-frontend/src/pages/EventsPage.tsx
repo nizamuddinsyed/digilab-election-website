@@ -15,6 +15,26 @@ interface Event {
   description_en: string;
 }
 
+// Utility function to format date from ISO string to DD.MM.YYYY
+const formatDate = (dateString: string): string => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('de-DE', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+};
+
+// Utility function to format time from HH:MM:SS to HH:MM
+const formatTime = (timeString: string): string => {
+  if (!timeString) return '';
+  // If it's already in HH:MM format, return as is
+  if (timeString.length <= 5) return timeString;
+  // If it's in HH:MM:SS format, extract HH:MM
+  return timeString.substring(0, 5);
+};
+
 const EventsPage: React.FC = () => {
   const { language, t } = useLanguage();
   const [events, setEvents] = useState<any[]>([]);
@@ -52,12 +72,12 @@ const EventsPage: React.FC = () => {
         {/* Page Header */}
         <div className="text-center mb-20">
           <h1 className="font-heading font-black text-6xl sm:text-7xl text-charcoal mb-6 tracking-tight">
-            {language === 'de' ? 'Termine' : 'Events'}
+            {language === 'de' ? 'Lust auf echten Austausch statt PR-Buzzwords?' : 'Want real exchange instead of PR buzzwords?'}
           </h1>
           <p className="font-heading text-xl text-charcoal-light max-w-3xl mx-auto">
             {language === 'de'
-              ? 'Bleiben Sie über alle wichtigen Termine informiert'
-              : 'Stay informed about all important events'}
+              ? 'Wir lernen Dich am liebsten persönlich kennen - kurz, unkompliziert und auf Augenhöhe.\nDafür haben wir zwei Formate entwickelt, die in jeden Alltag passen.'
+              : 'We prefer to get to know you personally - brief, uncomplicated, and on equal terms.\nThat\'s why we\'ve developed two formats that fit into any everyday routine.'}
           </p>
         </div>
 
@@ -75,10 +95,10 @@ const EventsPage: React.FC = () => {
                   </h3>
                   <div className="flex items-center gap-4">
                     <span className="px-4 py-2 bg-purple text-white font-bold rounded-full">
-                      {event.event_date}
+                      {formatDate(event.event_date)}
                     </span>
                     <span className="px-4 py-2 bg-teal text-white font-bold rounded-full">
-                      {event.event_time}
+                      {formatTime(event.event_time)}
                     </span>
                   </div>
                 </div>

@@ -41,12 +41,12 @@ const Header: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          <div className="hidden md:flex items-center space-x-0.5 lg:space-x-1">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-medium transition-all text-sm sm:text-base ${
+                className={`px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-medium transition-all text-sm sm:text-base whitespace-nowrap ${
                   isActive(link.to)
                     ? 'bg-charcoal text-white'
                     : 'text-charcoal-light hover:text-charcoal hover:bg-beige-light'
@@ -62,7 +62,7 @@ const Header: React.FC = () => {
             {/* Language Switcher */}
             <button
               onClick={toggleLanguage}
-              className="hidden md:flex items-center space-x-2 px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl border-2 border-charcoal-light hover:border-charcoal transition-all mr-2"
+              className="hidden md:flex items-center space-x-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl border-2 border-charcoal-light hover:border-charcoal transition-all mr-2"
               aria-label="Toggle language"
             >
               <GlobeAltIcon className="w-4 h-4 sm:w-5 sm:h-5 text-charcoal" />

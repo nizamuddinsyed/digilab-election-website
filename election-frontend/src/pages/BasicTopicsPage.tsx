@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import Starburst from '../components/Starburst';
 import { basicTopicsAPI } from '../services/api';
 
@@ -16,6 +17,7 @@ const BasicTopicsPage: React.FC = () => {
   const { language, t } = useLanguage();
   const [topics, setTopics] = useState<BasicTopic[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedTopic, setExpandedTopic] = useState<number | null>(null);
 
   useEffect(() => {
     loadTopics();
@@ -32,10 +34,20 @@ const BasicTopicsPage: React.FC = () => {
     }
   };
 
+  const toggleTopic = (id: number) => {
+    setExpandedTopic(expandedTopic === id ? null : id);
+  };
+
   const colorMap: { [key: string]: string } = {
     'purple': 'bg-purple',
     'silver': 'bg-silver',
     'teal': 'bg-teal'
+  };
+
+  const borderColorMap: { [key: string]: string } = {
+    'purple': 'border-purple',
+    'silver': 'border-silver',
+    'teal': 'border-teal'
   };
 
   return (
@@ -53,14 +65,14 @@ const BasicTopicsPage: React.FC = () => {
 
       <div className="container mx-auto px-8 sm:px-12 lg:px-20 xl:px-32 relative z-10">
         {/* Page Header */}
-        <div className="text-center mb-20">
-          <h1 className="font-heading font-black text-6xl sm:text-7xl text-charcoal mb-6 tracking-tight">
-            {language === 'de' ? 'Grundlegende Themen' : 'Basic Topics'}
+        <div className="text-center mb-12">
+          <h1 className="font-heading font-black text-5xl sm:text-6xl md:text-7xl text-charcoal mb-6 tracking-tight">
+            {language === 'de' ? 'Unsere Themen-Schwerpunkte' : 'Our Key Topics'}
           </h1>
-          <p className="font-heading text-xl text-charcoal-light max-w-3xl mx-auto">
+          <p className="font-heading text-lg sm:text-xl text-charcoal-light max-w-4xl mx-auto whitespace-pre-line">
             {language === 'de'
-              ? 'Unsere grundlegenden Themen und Initiativen für eine bessere Zukunft'
-              : 'Our basic topics and initiatives for a better future'}
+              ? 'Unsere Themenschwerpunkte zeigen, worauf wir den Fokus legen:\nmoderne Arbeitszeiten, faire Entwicklungsmöglichkeiten und wirksamer Schutz vor Diskriminierung\n– transparent, beteiligungsorientiert und nah an eurem Arbeitsalltag.'
+              : 'Our key topics show where we focus our efforts:\nmodern working hours, fair development opportunities, and effective protection against discrimination\n– transparent, participatory, and close to your daily work life.'}
           </p>
         </div>
 
@@ -69,18 +81,33 @@ const BasicTopicsPage: React.FC = () => {
             <div className="w-16 h-16 border-4 border-charcoal border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="max-w-4xl mx-auto space-y-6">
             {topics.map((topic) => (
               <div
                 key={topic.id}
-                className={`${colorMap[topic.color]} rounded-2xl p-8 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-105`}
+                className={`bg-white rounded-2xl border-2 ${borderColorMap[topic.color]} shadow-lg overflow-hidden transition-all duration-300`}
               >
-                <h3 className="font-heading font-bold text-2xl mb-4">
-                  {language === 'de' ? topic.title_de : topic.title_en}
-                </h3>
-                <p className="font-heading text-white/90 leading-relaxed">
-                  {language === 'de' ? topic.description_de : topic.description_en}
-                </p>
+                <button
+                  onClick={() => toggleTopic(topic.id)}
+                  className={`w-full flex items-center justify-between p-6 text-left ${colorMap[topic.color]} text-white`}
+                >
+                  <h3 className="font-heading font-bold text-xl sm:text-2xl">
+                    {language === 'de' ? topic.title_de : topic.title_en}
+                  </h3>
+                  {expandedTopic === topic.id ? (
+                    <ChevronUpIcon className="w-6 h-6" />
+                  ) : (
+                    <ChevronDownIcon className="w-6 h-6" />
+                  )}
+                </button>
+                
+                {expandedTopic === topic.id && (
+                  <div className="p-6 bg-white">
+                    <p className="font-heading text-charcoal-light leading-relaxed whitespace-pre-line">
+                      {language === 'de' ? topic.description_de : topic.description_en}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
