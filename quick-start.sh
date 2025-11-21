@@ -82,6 +82,11 @@ pnpm run build
 
 if [ -d "dist" ]; then
     echo -e "${GREEN}✓ Frontend build successful${NC}"
+    
+    echo "Deploying to backend..."
+    rm -rf ../backend/public/*
+    cp -r dist/* ../backend/public/
+    echo -e "${GREEN}✓ Frontend deployed to backend/public${NC}"
 else
     echo -e "${RED}✗ Frontend build failed${NC}"
     exit 1

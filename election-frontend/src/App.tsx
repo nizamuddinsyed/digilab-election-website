@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -15,11 +15,26 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import PrivacyPage from './pages/PrivacyPage';
 import LegalNoticePage from './pages/LegalNoticePage';
+import { initGA, logPageView } from './services/analytics';
+
+// Initialize GA4
+initGA();
+
+const AnalyticsTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    logPageView();
+  }, [location]);
+
+  return null;
+};
 
 function App() {
   return (
     <LanguageProvider>
       <Router>
+        <AnalyticsTracker />
         <ScrollToTop />
         <div className="flex flex-col min-h-screen">
           <Header />

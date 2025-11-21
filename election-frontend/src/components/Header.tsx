@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { GlobeAltIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Starburst from './Starburst';
+import { logEvent } from '../services/analytics';
 
 const Header: React.FC = () => {
   const { language, setLanguage, t } = useLanguage();
@@ -10,7 +11,9 @@ const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleLanguage = () => {
-    setLanguage(language === 'de' ? 'en' : 'de');
+    const newLang = language === 'de' ? 'en' : 'de';
+    setLanguage(newLang);
+    logEvent('Language', 'change_language', newLang);
   };
 
   const isActive = (path: string) => {
@@ -46,11 +49,10 @@ const Header: React.FC = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-medium transition-all text-sm sm:text-base whitespace-nowrap ${
-                  isActive(link.to)
+                className={`px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl sm:rounded-2xl font-heading font-medium transition-all text-sm sm:text-base whitespace-nowrap ${isActive(link.to)
                     ? 'bg-charcoal text-white'
                     : 'text-charcoal-light hover:text-charcoal hover:bg-beige-light'
-                }`}
+                  }`}
               >
                 {link.label}
               </Link>
@@ -70,7 +72,7 @@ const Header: React.FC = () => {
                 {language}
               </span>
             </button>
-            
+
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
               <button
@@ -84,7 +86,7 @@ const Header: React.FC = () => {
                   <Bars3Icon className="w-6 h-6" />
                 )}
               </button>
-              
+
               {/* Language Switcher for mobile */}
               <button
                 onClick={toggleLanguage}
@@ -111,11 +113,10 @@ const Header: React.FC = () => {
                   key={link.to}
                   to={link.to}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`px-4 py-3 rounded-xl font-heading font-medium transition-all ${
-                    isActive(link.to)
+                  className={`px-4 py-3 rounded-xl font-heading font-medium transition-all ${isActive(link.to)
                       ? 'bg-charcoal text-white'
                       : 'text-charcoal-light hover:text-charcoal hover:bg-beige-light'
-                  }`}
+                    }`}
                 >
                   {link.label}
                 </Link>

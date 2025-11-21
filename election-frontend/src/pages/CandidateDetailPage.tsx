@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { candidatesAPI, Candidate } from '../services/api';
-import { 
-  ArrowLeftIcon, 
-  EnvelopeIcon, 
-  ShareIcon, 
+import { logEvent } from '../services/analytics';
+import {
+  ArrowLeftIcon,
+  EnvelopeIcon,
+  ShareIcon,
   CheckBadgeIcon
 } from '@heroicons/react/24/outline';
 import Starburst from '../components/Starburst';
@@ -26,6 +27,9 @@ const CandidateDetailPage: React.FC = () => {
     try {
       const data = await candidatesAPI.getById(candidateId);
       setCandidate(data);
+
+      // Track candidate view
+      logEvent('Candidate', 'view_candidate', `${data.name} (ID: ${data.id})`);
     } catch (error) {
       console.error('Failed to load candidate:', error);
     } finally {
@@ -64,12 +68,12 @@ const CandidateDetailPage: React.FC = () => {
   }
 
   const bio = language === 'de' ? candidate.bio_de : candidate.bio_en;
-  
+
   // Process biography content to separate paragraphs from bullet points
   const processBioContent = (content: string) => {
     const lines = content.split('\n');
     const elements: { type: 'paragraph' | 'bullet'; content: string }[] = [];
-    
+
     for (const line of lines) {
       const trimmedLine = line.trim();
       if (trimmedLine) {
@@ -86,12 +90,12 @@ const CandidateDetailPage: React.FC = () => {
         }
       }
     }
-    
+
     return elements;
   };
-  
+
   const bioElements = processBioContent(bio);
-  
+
   // Determine color based on database field or ID
   const colorClasses = {
     'purple': { bg: 'bg-purple', text: 'text-purple' },
@@ -101,7 +105,7 @@ const CandidateDetailPage: React.FC = () => {
   const candidateColor = candidate.color && candidate.color in colorClasses
     ? colorClasses[candidate.color as keyof typeof colorClasses]
     : colorClasses[['purple', 'silver', 'teal'][(candidate.id - 1) % 3] as keyof typeof colorClasses];
-  
+
   // Determine complementary starburst color
   const starburstColorMap = {
     'purple': 'teal' as const,    // Purple header → Teal starburst
@@ -119,7 +123,7 @@ const CandidateDetailPage: React.FC = () => {
       <div className="absolute top-10 right-5 sm:top-20 sm:right-10 opacity-60 animate-spin-slow z-20">
         <Starburst color={starburstColor} size="md" />
       </div>
-      
+
       {/* Hero Banner with colored theme */}
       <div className={`relative ${candidateColor.bg} text-white`}>
         <div className="container mx-auto px-6 sm:px-8 lg:px-20 py-12 sm:py-16">
@@ -130,7 +134,7 @@ const CandidateDetailPage: React.FC = () => {
             <ArrowLeftIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
             {t.candidates.backToCandidates}
           </Link>
-          
+
           <div className="flex flex-col gap-8">
             {/* Photo and Info Section */}
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
@@ -149,7 +153,7 @@ const CandidateDetailPage: React.FC = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="text-center sm:text-left flex-1">
                 <h1 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl mb-2 sm:mb-3 leading-tight">
                   {candidate.name}
@@ -173,7 +177,7 @@ const CandidateDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="container mx-auto px-6 sm:px-8 lg:px-20 py-12 sm:py-20 relative z-10">
         <div className="max-w-5xl mx-auto">
           {/* Biography Section */}
@@ -181,7 +185,7 @@ const CandidateDetailPage: React.FC = () => {
             <h2 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-charcoal mb-6 sm:mb-8">
               {language === 'de' ? 'Über mich' : 'About Me'}
             </h2>
-            
+
             {/* Display biography with proper formatting for paragraphs and bullet points */}
             <div className="space-y-4 sm:space-y-6">
               {bioElements.map((element, index) => {
